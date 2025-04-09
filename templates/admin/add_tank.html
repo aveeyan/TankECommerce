@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
+    <h1 class="text-3xl font-semibold text-center mb-6 text-gray-800">Add New Tank</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Tank Name -->
+            <div class="form-group">
+                <label for="name" class="text-lg font-medium text-gray-700">Tank Name</label>
+                <input type="text" name="name" id="name" class="form-control w-full px-4 py-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+            </div>
+
+            <!-- Price -->
+            <div class="form-group">
+                <label for="price" class="text-lg font-medium text-gray-700">Price</label>
+                <input type="number" name="price" id="price" class="form-control w-full px-4 py-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" step="0.01" required>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group mt-6">
+            <label for="description" class="text-lg font-medium text-gray-700">Description</label>
+            <textarea name="description" id="description" class="form-control w-full px-4 py-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" rows="4" required></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <!-- Stock -->
+            <div class="form-group">
+                <label for="stock" class="text-lg font-medium text-gray-700">Stock</label>
+                <input type="number" name="stock" id="stock" class="form-control w-full px-4 py-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+            </div>
+
+            <!-- Scale -->
+            <div class="form-group">
+                <label for="scale" class="text-lg font-medium text-gray-700">Scale</label>
+                <input type="text" name="scale" id="scale" class="form-control w-full px-4 py-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <!-- Category -->
+            <div class="form-group">
+                <label for="category_id" class="text-lg font-medium text-gray-700">Category</label>
+                <select name="category_id" id="category_id" class="form-control w-full px-4 py-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Nation -->
+            <div class="form-group">
+                <label for="nation_id" class="text-lg font-medium text-gray-700">Nation</label>
+                <select name="nation_id" id="nation_id" class="form-control w-full px-4 py-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    {% for nation in nations %}
+                        <option value="{{ nation.id }}">{{ nation.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="form-group mt-6">
+            <label for="image" class="text-lg font-medium text-gray-700">Tank Image</label>
+            <input type="file" name="image" id="image" class="form-control w-full px-4 py-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+
+        <div class="text-center mt-6">
+            <button type="submit" class="btn btn-primary px-6 py-3 bg-blue-500 text-white font-semibold rounded-md shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">Add Tank</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

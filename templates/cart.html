@@ -1,0 +1,97 @@
+<!-- templates/cart.html -->
+{% extends 'base.html' %}
+
+{% block title %}Your Cart - TankECommerce{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-6">Your Shopping Cart</h1>
+
+{% if not cart_items %}
+    <div class="bg-white p-6 rounded shadow text-center">
+        <p class="text-gray-600 mb-4">Your cart is empty.</p>
+        <a href="{{ url_for('index') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Continue Shopping
+        </a>
+    </div>
+{% else %}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Cart Items -->
+        <div class="md:col-span-2">
+            <div class="bg-white rounded shadow overflow-hidden">
+                <div class="px-6 py-4 border-b">
+                    <h2 class="font-semibold text-lg">Cart Items</h2>
+                </div>
+                
+                <div class="divide-y">
+                    {% for item in cart_items %}
+                        <div class="p-6 flex flex-col md:flex-row md:items-center">
+                            <div class="flex-shrink-0 w-24 h-24 bg-gray-200 rounded overflow-hidden mb-4 md:mb-0 md:mr-6">
+                                {% if item.tank.image_path %}
+                                    <img src="{{ url_for('static', filename=item.tank.image_path.replace('static/', '')) }}" 
+                                         alt="{{ item.tank.name }}" class="w-full h-full object-cover">
+                                {% else %}
+                                    <div class="flex items-center justify-center h-full bg-gray-300 text-gray-500">
+                                        No Image
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="flex-grow">
+                                <h3 class="font-semibold text-lg mb-1">{{ item.tank.name }}</h3>
+                                <p class="text-gray-600 text-sm mb-2">{{ item.tank.nation.name }} | {{ item.tank.category.name }} | Scale: {{ item.tank.scale }}</p>
+                                <div class="flex justify-between">
+                                    <div>
+                                        <span class="text-gray-700">Quantity: {{ item.quantity }}</span>
+                                        <span class="mx-2">•</span>
+                                        <span class="font-semibold">Rs. {{ item.tank.price }} each</span>
+                                    </div>
+                                    <span class="font-bold">Rs. {{ item.tank.price * item.quantity }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 md:mt-0 md:ml-4">
+                                <a href="{{ url_for('remove_from_cart', item_id=item.id) }}" 
+                                   class="text-red-600 hover:text-red-800" 
+                                   onclick="return confirm('Are you sure you want to remove this item?');">
+                                    Remove
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="md:col-span-1">
+            <div class="bg-white rounded shadow p-6 sticky top-6">
+                <h2 class="font-semibold text-lg mb-4">Order Summary</h2>
+                
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between">
+                        <span>Subtotal</span>
+                        <span>Rs. {{ total }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Shipping</span>
+                        <span>Free</span>
+                    </div>
+                    <div class="border-t pt-2 mt-2 font-bold flex justify-between">
+                        <span>Total</span>
+                        <span>Rs. {{ total }}</span>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('checkout') }}" class="w-full block text-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Proceed to Checkout
+                </a>
+                
+                <a href="{{ url_for('index') }}" class="w-full block text-center mt-4 text-blue-600 hover:underline">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+

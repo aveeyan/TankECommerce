@@ -1,0 +1,60 @@
+<!-- templates/product.html -->
+{% extends 'base.html' %}
+
+{% block title %}{{ tank.name }} - TankECommerce{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded shadow p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Product Image -->
+        <div class="bg-gray-100 rounded overflow-hidden">
+            {% if tank.image_path %}
+                <img src="{{ url_for('static', filename=tank.image_path.replace('static/', '')) }}" 
+                     alt="{{ tank.name }}" class="w-full h-auto object-contain">
+            {% else %}
+                <div class="flex items-center justify-center h-64 bg-gray-200 text-gray-500">
+                    No Image Available
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Product Details -->
+        <div>
+            <div class="mb-4">
+                <div class="flex justify-between items-start">
+                    <h1 class="text-2xl font-bold">{{ tank.name }}</h1>
+                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">{{ tank.category.name }}</span>
+                </div>
+                <p class="text-gray-600">{{ tank.nation.name }} | Scale: {{ tank.scale }}</p>
+            </div>
+            
+            <p class="text-3xl font-bold mb-4">Rs. {{ tank.price }}</p>
+            
+            <div class="mb-6">
+                <h3 class="font-semibold text-lg mb-2">Description</h3>
+                <p class="text-gray-700">{{ tank.description }}</p>
+            </div>
+            
+            {% if tank.stock > 0 %}
+                <p class="text-green-600 mb-4">In Stock ({{ tank.stock }} available)</p>
+                <form action="{{ url_for('add_to_cart', tank_id=tank.id) }}" method="post" class="flex items-center">
+                    <div class="mr-4">
+                        <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ tank.stock }}" 
+                               class="border rounded px-3 py-2 w-20">
+                    </div>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                        Add to Cart
+                    </button>
+                </form>
+            {% else %}
+                <p class="text-red-600 mb-4">Out of Stock</p>
+                <button class="bg-gray-300 text-gray-600 px-6 py-2 rounded cursor-not-allowed" disabled>
+                    Out of Stock
+                </button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

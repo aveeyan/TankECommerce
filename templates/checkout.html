@@ -1,0 +1,174 @@
+<!-- templates/checkout.html -->
+{% extends 'base.html' %}
+
+{% block title %}Checkout - TankECommerce{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-6">Checkout</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Shipping Information -->
+    <div class="md:col-span-2">
+        <div class="bg-white rounded shadow overflow-hidden mb-6">
+            <div class="px-6 py-4 border-b">
+                <h2 class="font-semibold text-lg">Shipping Information</h2>
+            </div>
+            
+            <div class="p-6">
+                <form action="{{ url_for('checkout') }}" method="post" id="checkout-form">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                            <input type="text" id="first_name" name="first_name" required 
+                                   class="w-full border rounded px-3 py-2">
+                        </div>
+                        <div>
+                            <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                            <input type="text" id="last_name" name="last_name" required 
+                                   class="w-full border rounded px-3 py-2">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <input type="email" id="email" name="email" required 
+                               class="w-full border rounded px-3 py-2">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                        <input type="text" id="address" name="address" required 
+                               class="w-full border rounded px-3 py-2">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                            <input type="text" id="city" name="city" required 
+                                   class="w-full border rounded px-3 py-2">
+                        </div>
+                        <div>
+                            <label for="state" class="block text-sm font-medium text-gray-700 mb-1">State/Province</label>
+                            <input type="text" id="state" name="state" required 
+                                   class="w-full border rounded px-3 py-2">
+                        </div>
+                        <div>
+                            <label for="zip" class="block text-sm font-medium text-gray-700 mb-1">ZIP/Postal Code</label>
+                            <input type="text" id="zip" name="zip" required 
+                                   class="w-full border rounded px-3 py-2">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required 
+                               class="w-full border rounded px-3 py-2">
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Payment Method -->
+        <div class="bg-white rounded shadow overflow-hidden">
+            <div class="px-6 py-4 border-b">
+                <h2 class="font-semibold text-lg">Payment Method</h2>
+            </div>
+            
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <input type="radio" id="esewa" name="payment_method" value="esewa" checked 
+                               class="mr-2" form="checkout-form">
+                        <label for="esewa" class="flex items-center">
+                            <span class="mr-2">eSewa</span>
+                            <img src="{{ url_for('static', filename='img/esewa-logo.png') }}" alt="eSewa" 
+                                 class="h-8" onerror="this.src='https://via.placeholder.com/80x30?text=eSewa'">
+                        </label>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="radio" id="stripe" name="payment_method" value="stripe" 
+                               class="mr-2" form="checkout-form">
+                        <label for="stripe" class="flex items-center">
+                            <span class="mr-2">Credit/Debit Card</span>
+                            <img src="{{ url_for('static', filename='img/stripe-logo.png') }}" alt="Stripe"
+                                 class="h-8" onerror="this.src='https://via.placeholder.com/80x30?text=Stripe'">
+                        </label>
+                    </div>
+                    
+                    <div id="esewa-info" class="bg-green-50 p-4 rounded border border-green-200">
+                        <p class="text-sm text-green-800">
+                            You will be redirected to eSewa to complete your payment.
+                        </p>
+                    </div>
+                    
+                    <div id="stripe-info" class="hidden bg-blue-50 p-4 rounded border border-blue-200">
+                        <p class="text-sm text-blue-800">
+                            You will be redirected to our secure payment page to enter your card details.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Order Summary -->
+    <div class="md:col-span-1">
+        <div class="bg-white rounded shadow p-6 sticky top-6">
+            <h2 class="font-semibold text-lg mb-4">Order Summary</h2>
+            
+            <div class="space-y-4 mb-6">
+                {% for item in cart_items %}
+                    <div class="flex">
+                        <div class="flex-shrink-0 w-12 h-12 bg-gray-200 rounded overflow-hidden mr-3">
+                            {% if item.tank.image_path %}
+                                <img src="{{ url_for('static', filename=item.tank.image_path.replace('static/', '')) }}" 
+                                     alt="{{ item.tank.name }}" class="w-full h-full object-cover">
+                            {% endif %}
+                        </div>
+                        <div class="flex-grow">
+                            <p class="text-sm font-medium">{{ item.tank.name }}</p>
+                            <p class="text-xs text-gray-600">Qty: {{ item.quantity }}</p>
+                        </div>
+                        <div class="ml-2">
+                            <p class="text-sm font-semibold">Rs. {{ item.tank.price * item.quantity }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="space-y-2 mb-4">
+                <div class="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>Rs. {{ total }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Shipping</span>
+                    <span>Free</span>
+                </div>
+                <div class="border-t pt-2 mt-2 font-bold flex justify-between">
+                    <span>Total</span>
+                    <span>Rs. {{ total }}</span>
+                </div>
+            </div>
+            
+            <button type="submit" form="checkout-form" class="w-full block text-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Proceed to Payment
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Toggle payment method information
+    document.getElementById('esewa').addEventListener('change', function() {
+        document.getElementById('esewa-info').classList.remove('hidden');
+        document.getElementById('stripe-info').classList.add('hidden');
+    });
+    
+    document.getElementById('stripe').addEventListener('change', function() {
+        document.getElementById('esewa-info').classList.add('hidden');
+        document.getElementById('stripe-info').classList.remove('hidden');
+    });
+</script>
+{% endblock %}

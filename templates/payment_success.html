@@ -1,0 +1,38 @@
+<!-- templates/payment_success.html -->
+{% extends 'base.html' %}
+
+{% block title %}Payment Successful - TankECommerce{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="bg-white rounded shadow p-6 text-center">
+        <div class="mb-4 text-green-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </div>
+        <h1 class="text-2xl font-bold mb-4">Payment Successful!</h1>
+        <div class="mb-6">
+            <p class="text-gray-600 mb-4">
+                Thank you for your purchase. Your order has been successfully processed.
+            </p>
+            <div class="bg-gray-100 p-4 rounded text-left">
+                <p class="font-semibold mb-2">Order Summary</p>
+                <p class="text-sm text-gray-600">Order ID: {{ order.id }}</p>
+                <p class="text-sm text-gray-600">Date: {{ order.order_date.strftime('%B %d, %Y') }}</p>
+                <p class="text-sm text-gray-600">Total Amount: Rs. {{ order.total_amount }}</p>
+                <p class="text-sm text-gray-600">Payment Method: {{ order.payment_method }}</p>
+                <p class="text-sm text-gray-600">Payment ID: {{ order.payment_id }}</p>
+            </div>
+        </div>
+        <div class="space-y-3">
+            <a href="{{ url_for('order_history') }}" class="block bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300">
+                View Order History
+            </a>
+            <a href="{{ url_for('index') }}" class="block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                Continue Shopping
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
