@@ -1,0 +1,109 @@
+<!-- templates/payment_process.html -->
+{% extends 'base.html' %}
+{% block title %}Processing Payment - TankECommerce{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto">
+  <div class="bg-white rounded shadow p-6">
+    <h1 class="text-2xl font-bold mb-4 text-center">Payment</h1>
+    <div class="mb-6">
+      <div class="bg-gray-100 p-4 rounded mb-4">
+        <p class="font-semibold mb-2">Order Total: ${{ "%.2f"|format(payment_data.amount) }}</p>
+        <p class="text-sm text-gray-600">Order ID: {{ payment_data.order_id }}</p>
+      </div>
+      
+      <!-- Stripe Payment Form -->
+      <form id="payment-form" class="space-y-4">
+        <div id="card-element" class="p-4 border rounded">
+          <!-- Stripe.js will insert the card element here -->
+        </div>
+        <div id="card-errors" class="text-red-600 text-sm" role="alert"></div>
+        
+        <button type="submit" id="submit-button" class="w-full bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+          <span id="button-text">Pay Now</span>
+          <div id="spinner" class="hidden">Processing...</div>
+        </button>
+      </form>
+    </div>
+    
+    <div class="text-center mt-4">
+      <a href="{{ url_for('cart') }}" class="text-blue-600 hover:underline">Return to Cart</a>
+    </div>
+  </div>
+</div>
+
+<!-- Include Stripe.js -->
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  // Initialize Stripe
+  const stripe = Stripe('{{ stripe_public_key }}');
+  const elements = stripe.elements();
+  
+  // Create card Element and mount it
+  const cardElement = elements.create('card');
+  cardElement.mount('#card-element');
+  
+  // Handle form submission
+  const form = document.getElementById('payment-form');
+  const submitButton = document.getElementById('submit-button');
+  const spinner = document.getElementById('spinner');
+  const buttonText = document.getElementById('button-text');
+  
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    
+    // Disable form submission until complete
+    submitButton.disabled = true;
+    spinner.classList.remove('hidden');
+    buttonText.classList.add('hidden');
+    
+    // Create payment intent on the server
+    const response = await fetch('{{ url_for("create_payment_intent") }}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        order_id: '{{ payment_data.order_id }}',
+        amount: '{{ payment_data.amount }}'
+      })
+    });
+    
+    const paymentData = await response.json();
+    
+    if (paymentData.error) {
+      displayError(paymentData.error);
+      submitButton.disabled = false;
+      spinner.classList.add('hidden');
+      buttonText.classList.remove('hidden');
+      return;
+    }
+    
+    // Confirm card payment
+    const { error, paymentIntent } = await stripe.confirmCardPayment(paymentData.clientSecret, {
+      payment_method: {
+        card: cardElement
+      }
+    });
+    
+    if (error) {
+      displayError(error.message);
+      submitButton.disabled = false;
+      spinner.classList.add('hidden');
+      buttonText.classList.remove('hidden');
+    } else if (paymentIntent.status === 'succeeded') {
+      // Payment succeeded, redirect to success page
+      window.location.href = '{{ url_for("payment_success") }}';
+    } else {
+      displayError('Payment processing failed. Please try again.');
+      submitButton.disabled = false;
+      spinner.classList.add('hidden');
+      buttonText.classList.remove('hidden');
+    }
+  });
+  
+  function displayError(message) {
+    const errorElement = document.getElementById('card-errors');
+    errorElement.textContent = message;
+  }
+</script>
+{% endblock %}
