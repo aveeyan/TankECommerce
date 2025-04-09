@@ -54,12 +54,11 @@ Your website should now be live and accessible in your browser.
 ## Screenshots
 
 Here are some screenshots demonstrating the functionality of the website:
-
-1. ![Screenshot 1](https://github.com/user-attachments/assets/df425ddf-ad21-428d-abd1-cfd010c6d4e6)
-2. ![Screenshot 2](https://github.com/user-attachments/assets/2100fd12-573f-47ae-be73-450cfb9512d4)
-3. ![Screenshot 3](https://github.com/user-attachments/assets/9c0c97a1-3b30-456d-84a0-e1172b8c43c7)
-4. ![Screenshot 4](https://github.com/user-attachments/assets/2235154e-bda3-4e43-8b73-e5e1b5e71560)
-5. ![Screenshot 5](https://github.com/user-attachments/assets/0668f46c-249d-435e-991d-ac8d37acfb2a)
+![Screenshot 1](https://github.com/user-attachments/assets/df425ddf-ad21-428d-abd1-cfd010c6d4e6)
+![Screenshot 2](https://github.com/user-attachments/assets/2100fd12-573f-47ae-be73-450cfb9512d4)
+![Screenshot 3](https://github.com/user-attachments/assets/9c0c97a1-3b30-456d-84a0-e1172b8c43c7)
+![Screenshot 4](https://github.com/user-attachments/assets/2235154e-bda3-4e43-8b73-e5e1b5e71560)
+![Screenshot 5](https://github.com/user-attachments/assets/0668f46c-249d-435e-991d-ac8d37acfb2a)
 
 ## Future Features
 - Order Management System (Coming soon)
